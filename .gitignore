@@ -3,3 +3,4 @@
 /env
 **/models
 **/checkpoints
+**/raw_data
