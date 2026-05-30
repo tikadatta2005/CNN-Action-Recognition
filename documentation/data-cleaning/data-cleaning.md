@@ -29,3 +29,5 @@ The optimal solutions for flaw:
 * Blend the existing train-test to a single dataset then later use the final dataset for extracting 80-20 Train-Test split.
 
 Since the directory structure of each dataset is different, the code uses different methods for data extraction. The video frame extraction uses opencv-python library that internally uses FFmpeg.
+
+The frames extracted from the videos are stored in "/dataset/cleaned-dataset/..". Each frame is of (224x224) size. This was done to meet the normal standard.
