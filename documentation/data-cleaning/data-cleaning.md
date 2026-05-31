@@ -11,7 +11,7 @@ For the such data, multiple sources were used for gathering. The data used in th
 
 Most of the dataset here are in video format. Each source has multiple type of voilence and non-voilence dataset. Some of the source provide training and testing set while some have not labeled.
 
-Only necessary and most relevant data is extracted and stored in /datasets/raw_data folder. This folder contains 5 types of data:
+Only necessary and most relevant data is extracted and stored in `/datasets/raw_data` folder. This folder contains 5 types of data:
 * <b>voilent: </b> This folder has videos of synthetic data of some voilence. Though this data has the most clean and clear videos, it lacks location and human variation. It also lacks proper classifications. It only has a folder that says voilent and non voilent. Out of which non-voilent dataset is not included. 
 * <b>SCVD_converted:</b> This is a very good dataset that has different angles, location and real-world making it one of the perfect dataset, but it still has some problems such as file type. Also the dataset's classification is not good. It only classifies as Normal, Voilence, Weaponized. This data contains Train and Test Splits.
 * <b>reallife-camera-dataset:</b> This is another good dataset. But it still lacks the classifications. It only has two classification fight and noFight.
@@ -30,4 +30,4 @@ The optimal solutions for flaw:
 
 Since the directory structure of each dataset is different, the code uses different methods for data extraction. The video frame extraction uses opencv-python library that internally uses FFmpeg.
 
-The frames extracted from the videos are stored in "/dataset/cleaned-dataset/..". Each frame is of (224x224) size. This was done to meet the normal standard.
+The frames extracted from the videos are stored in `/dataset/cleaned-dataset/..`. Each frame is of (224x224) size. This was done to meet the normal standard.
