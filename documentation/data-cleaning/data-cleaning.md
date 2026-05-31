@@ -25,13 +25,19 @@ A raw data was ready so the data must be giving valuable information. But there 
 * There is in-consitent classifcations.
 * Some contain train-test split while other dont.
 * Some directory contains video where some contains images
+* The data at `/dataset/raw_data/weaponized/` includes images of both normal and weaponized in same directory, but includes "normal" in the file name.
 
 The optimal solutions for flaw:
 * Extract Frames from video and store images.
 * Classify voilence into alert, weaponized into high-alert and normal into no-alert.
 * Blend the existing train-test to a single dataset then later use the final dataset for extracting 80-20 Train-Test split.
 * Use different techniques for extracting data from videos and images
-
-Since the directory structure of each dataset is different, the code uses different methods for data extraction. The video frame extraction uses opencv-python library that internally uses FFmpeg. Also the image extraction will use Image and transforms for optimizing.
+* Check filename and decide to classify the image
 
 The frames extracted from the videos are stored in `/dataset/cleaned-dataset/..`. Each frame is of (224x224) size. This was done to meet the normal standard.
+
+There are multple functions used in data cleaning. To structure the functions cleanly, each function is made as a reusable-module inside `/dataset/modules`. Following modules will be used:
+* `VideoExtractor.py` for extracting frames
+* `ImageClassifier.py` for classifying images
+
+`VideoExtractor.py` module provides a function `extract_frames` that accepts parameters: input_directory, output_directory, size and VIDEO_EXTENSIONS. The default value for size is (224,224) and VIDEO_EXTENSIONS is {".mp4", ".av1"}. This module uses opencv-python for extracting frames from video and save in output_directory.
