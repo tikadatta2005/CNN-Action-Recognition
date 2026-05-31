@@ -41,3 +41,7 @@ There are multple functions used in data cleaning. To structure the functions cl
 * `ImageClassifier.py` for classifying images
 
 `VideoExtractor.py` module provides a function `extract_frames` that accepts parameters: input_directory, output_directory, size and VIDEO_EXTENSIONS. The default value for size is (224,224) and VIDEO_EXTENSIONS is {".mp4", ".av1"}. This module uses opencv-python for extracting frames from video and save in output_directory.
+
+`ImageClassifier.py` module provides a function `extract_image` that accepts input_directory, output_directory, size, includes, and excludes. The default value for size is (224, 224), includes and excludes is None. This module use PIL.Image for opening, resizing and saving in output directory.
+
+The code using both modules is in `/dataset/clean.ipynb`. 

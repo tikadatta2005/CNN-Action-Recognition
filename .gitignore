@@ -1,7 +1,13 @@
 **/__pycache__
-.env
+
+.env.*
+
 /env
+
 **/models
+
 **/checkpoints
+
 **/raw_data
+
 **/cleaned-dataset
