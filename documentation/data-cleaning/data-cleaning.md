@@ -43,3 +43,10 @@ There are multple functions used in data cleaning. To structure the functions cl
 `ImageClassifier.py` module provides a function `extract_image` that accepts input_directory, output_directory, size, includes, and excludes. The default value for size is (224, 224), includes and excludes is None. This module use PIL.Image for opening, resizing and saving in output directory.
 
 The code using both modules is in `/dataset/clean.ipynb`. 
+
+The data was structured but still it was not splitted for training and testing. So a small module was made for splitting the `/dataset/cleaned-dataset` to a `/dataset/final-dataset`. The module resulted `/dataset/final-dataset` directory which contained:
+* train
+* valid
+* test
+
+This `/dataset/final-dataset` is used for whole experiment of this research oriented project.
