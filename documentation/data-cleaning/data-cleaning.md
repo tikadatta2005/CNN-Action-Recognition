@@ -8,6 +8,7 @@ For the such data, multiple sources were used for gathering. The data used in th
 * https://www.kaggle.com/datasets/mdusmanhanif/normal-vs-abnormal-action-analysis-datasets
 * https://www.kaggle.com/datasets/tathagatbanerjee/ucf-violent-activity-frames-npy
 * https://www.kaggle.com/datasets/adityapatil8668/fighting
+* https://www.kaggle.com/datasets/turkikhalidalshuaibi/haris-weapon-detection-dataset-curated
 
 Most of the dataset here are in video format. Each source has multiple type of voilence and non-voilence dataset. Some of the source provide training and testing set while some have not labeled.
 
@@ -17,17 +18,20 @@ Only necessary and most relevant data is extracted and stored in `/datasets/raw_
 * <b>reallife-camera-dataset:</b> This is another good dataset. But it still lacks the classifications. It only has two classification fight and noFight.
 * <b>real-life-voilence-non-voilence-dataset:</b> This is another outstanding dataset but this still does have only two classes which is voilence and non-voilence.
 * <b>name-framed:</b> This dataset is a very tiny dataset which includes only 6 videos which is of 40s average. This dataset was customized by renaming it with the exact time of when voilence or assult starts and ends. This time "20-40.mp4" this time will allow video to be splitted from 20 to 40 and frames to be extracted from this exact time frame.
+* <b>weapon-dataset:</b> This is the image dataset that contains multiple images of armed person. This will be used for classifying high alert.
 
 A raw data was ready so the data must be giving valuable information. But there are two major flaw:
 * CNN doesnot understand videos directly. 
 * There is in-consitent classifcations.
 * Some contain train-test split while other dont.
+* Some directory contains video where some contains images
 
 The optimal solutions for flaw:
 * Extract Frames from video and store images.
-* Generalize voilence, fight, Weaponized to a single class "Threat".
+* Classify voilence into alert, weaponized into high-alert and normal into no-alert.
 * Blend the existing train-test to a single dataset then later use the final dataset for extracting 80-20 Train-Test split.
+* Use different techniques for extracting data from videos and images
 
-Since the directory structure of each dataset is different, the code uses different methods for data extraction. The video frame extraction uses opencv-python library that internally uses FFmpeg.
+Since the directory structure of each dataset is different, the code uses different methods for data extraction. The video frame extraction uses opencv-python library that internally uses FFmpeg. Also the image extraction will use Image and transforms for optimizing.
 
 The frames extracted from the videos are stored in `/dataset/cleaned-dataset/..`. Each frame is of (224x224) size. This was done to meet the normal standard.
