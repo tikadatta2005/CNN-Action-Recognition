@@ -41,6 +41,7 @@ def extract_image(
 
             filename = f"{image_path.stem}-{uuid4().hex}.jpg"
             image.save(output_directory / filename)
+            print("Image saved!")
 
         except Exception as e:
             print(f"Skipping {image_path}: {e}")

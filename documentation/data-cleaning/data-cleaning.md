@@ -3,10 +3,8 @@
 The dataset of fight, crime, voilence and normal situation is required for human action Recognition system. Simple postures like sit, stand is not selected in this dataset as this project intends to be used as voilence detection, crime detection in future model.
 
 For the such data, multiple sources were used for gathering. The data used in this project is gathered from different kaggle providers. Following are the direct kaggle reference of the dataset:
-* https://www.kaggle.com/datasets/meetnagadia/human-action-recognition-har-dataset
 * https://www.kaggle.com/datasets/toluwaniaremu/smartcity-cctv-violence-detection-dataset-scvd
 * https://www.kaggle.com/datasets/mdusmanhanif/normal-vs-abnormal-action-analysis-datasets
-* https://www.kaggle.com/datasets/tathagatbanerjee/ucf-violent-activity-frames-npy
 * https://www.kaggle.com/datasets/adityapatil8668/fighting
 * https://www.kaggle.com/datasets/turkikhalidalshuaibi/haris-weapon-detection-dataset-curated
 
