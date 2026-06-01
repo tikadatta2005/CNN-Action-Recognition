@@ -1,52 +1,63 @@
-# Data Prepearation
+# Data Preparation
 
-The dataset of fight, crime, voilence and normal situation is required for human action Recognition system. Simple postures like sit, stand is not selected in this dataset as this project intends to be used as voilence detection, crime detection in future model.
+A dataset containing fight, crime, violence, weaponized situations, and normal activities is required for the Human Action Recognition system. Simple human postures such as sitting, standing, or walking were not considered as separate classes because the primary objective of this project is violence and crime detection, with the possibility of extending it to a broader surveillance alert system in future work.
 
-For the such data, multiple sources were used for gathering. The data used in this project is gathered from different kaggle providers. Following are the direct kaggle reference of the dataset:
+To gather sufficient data, multiple publicly available datasets were combined. The datasets used in this project were collected from different Kaggle providers. The original sources are listed below:
+
 * https://www.kaggle.com/datasets/toluwaniaremu/smartcity-cctv-violence-detection-dataset-scvd
 * https://www.kaggle.com/datasets/mdusmanhanif/normal-vs-abnormal-action-analysis-datasets
 * https://www.kaggle.com/datasets/adityapatil8668/fighting
-* https://www.kaggle.com/datasets/turkikhalidalshuaibi/haris-weapon-detection-dataset-curated
 
-Most of the dataset here are in video format. Each source has multiple type of voilence and non-voilence dataset. Some of the source provide training and testing set while some have not labeled.
+Most of the collected datasets are distributed in video format, while a few are provided as images. Each source contains different classifications, formats, and directory structures. Therefore, only the necessary and most relevant data were extracted and organized into the `/dataset/raw_data` directory.
 
-Only necessary and most relevant data is extracted and stored in `/datasets/raw_data` folder. This folder contains 5 types of data:
-* <b>voilent: </b> This folder has videos of synthetic data of some voilence. Though this data has the most clean and clear videos, it lacks location and human variation. It also lacks proper classifications. It only has a folder that says voilent and non voilent. Out of which non-voilent dataset is not included. 
-* <b>SCVD_converted:</b> This is a very good dataset that has different angles, location and real-world making it one of the perfect dataset, but it still has some problems such as file type. Also the dataset's classification is not good. It only classifies as Normal, Voilence, Weaponized. This data contains Train and Test Splits.
-* <b>reallife-camera-dataset:</b> This is another good dataset. But it still lacks the classifications. It only has two classification fight and noFight.
-* <b>real-life-voilence-non-voilence-dataset:</b> This is another outstanding dataset but this still does have only two classes which is voilence and non-voilence.
-* <b>name-framed:</b> This dataset is a very tiny dataset which includes only 6 videos which is of 40s average. This dataset was customized by renaming it with the exact time of when voilence or assult starts and ends. This time "20-40.mp4" this time will allow video to be splitted from 20 to 40 and frames to be extracted from this exact time frame.
-* <b>weapon-dataset:</b> This is the image dataset that contains multiple images of armed person. This will be used for classifying high alert.
+The raw dataset consists of the following categories:
 
-A raw data was ready so the data must be giving valuable information. But there are two major flaw:
-* CNN doesnot understand videos directly. 
-* There is in-consitent classifcations.
-* Some contain train-test split while other dont.
-* Some directory contains video where some contains images
-* The data at `/dataset/raw_data/weaponized/` includes images of both normal and weaponized in same directory, but includes "normal" in the file name.
+* **violent:** Contains synthetic violence videos. Although the videos are generally clean and visually clear, they lack environmental diversity, location variation, and detailed classifications. The original dataset contains only violent and non-violent folders.
+* **SCVD_converted:** A high-quality dataset containing multiple camera angles, locations, and real-world scenarios. However, it only provides three classes: Normal, Violence, and Weaponized. The dataset also contains predefined training and testing splits.
+* **reallife-camera-dataset:** Contains real-world surveillance footage classified into Fight and NoFight categories.
+* **real-life-violence-non-violence-dataset:** Another high-quality dataset containing Violence and Non-Violence classes.
+* **name-framed:** A small custom dataset consisting of six videos. The files were renamed using timestamps indicating when violent actions begin and end. For example, a filename such as `20-40.mp4` indicates that only the segment between 20 and 40 seconds should be extracted for processing.
+* **weapon-dataset:** An image dataset containing individuals carrying weapons. This dataset is intended to represent high-alert situations.
 
-The optimal solutions for flaw:
-* Extract Frames from video and store images.
-* Classify voilence into alert, weaponized into high-alert and normal into no-alert.
-* Blend the existing train-test to a single dataset then later use the final dataset for extracting 80-20 Train-Test split.
-* Use different techniques for extracting data from videos and images
-* Check filename and decide to classify the image
+Although the raw data provided valuable information, several challenges were identified:
 
-The frames extracted from the videos are stored in `/dataset/cleaned-dataset/..`. Each frame is of (224x224) size. This was done to meet the normal standard.
+* CNN-based image classification models cannot process videos directly.
+* Different datasets use inconsistent class labels and directory structures.
+* Some datasets provide predefined train-test splits while others do not.
+* Some sources contain videos whereas others contain images.
+* The weapon dataset contains both normal and weaponized images within the same directory, requiring additional filtering based on file naming conventions.
 
-There are multple functions used in data cleaning. To structure the functions cleanly, each function is made as a reusable-module inside `/dataset/modules`. Following modules will be used:
-* `VideoExtractor.py` for extracting frames
-* `ImageClassifier.py` for classifying images
+To address these issues, a unified data preparation pipeline was developed. The original dataset labels were mapped into three common categories:
 
-`VideoExtractor.py` module provides a function `extract_frames` that accepts parameters: input_directory, output_directory, size and VIDEO_EXTENSIONS. The default value for size is (224,224) and VIDEO_EXTENSIONS is {".mp4", ".av1"}. This module uses opencv-python for extracting frames from video and save in output_directory.
+* **No Alert**
+* **Alert**
+* **High Alert**
 
-`ImageClassifier.py` module provides a function `extract_image` that accepts input_directory, output_directory, size, includes, and excludes. The default value for size is (224, 224), includes and excludes is None. This module use PIL.Image for opening, resizing and saving in output directory.
+Violence-related activities were mapped to the **Alert** class, weaponized activities were mapped to **High Alert**, and normal activities were mapped to **No Alert**.
 
-The code using both modules is in `/dataset/clean.ipynb`. 
+Initially, videos were converted into image frames and stored in `/dataset/cleaned-dataset`. Each extracted frame was resized to **224 × 224 pixels** to maintain a consistent input size for model training.
 
-The data was structured but still it was not splitted for training and testing. So a small module was made for splitting the `/dataset/cleaned-dataset` to a `/dataset/final-dataset`. The module resulted `/dataset/final-dataset` directory which contained:
-* train
-* valid
-* test
+To keep the preprocessing pipeline modular and reusable, the implementation was organized into separate modules located in `/dataset/modules`.
 
-This `/dataset/final-dataset` is used for whole experiment of this research oriented project.
+The following modules were used:
+
+* `VideoExtractor.py` – Responsible for extracting frames from videos.
+* `ImageClassifier.py` – Responsible for processing and organizing image datasets.
+
+The `VideoExtractor.py` module provides an `extract_frames()` function that accepts the parameters `input_directory`, `output_directory`, `size`, and `VIDEO_EXTENSIONS`. The default image size is `(224, 224)`, and the module uses OpenCV to read videos and save extracted frames.
+
+The `ImageClassifier.py` module provides an `extract_image()` function that accepts `input_directory`, `output_directory`, `size`, `includes`, and `excludes`. The default image size is `(224, 224)`, while both `includes` and `excludes` default to `None`. The module uses PIL to load, resize, and save images.
+
+The preprocessing workflow utilizing these modules is implemented in `/dataset/clean.ipynb`.
+
+During experimentation, an important issue was identified when creating training, validation, and testing datasets after frame extraction. Consecutive frames extracted from the same video are often highly similar. If frame-level splitting is performed after extraction, nearly identical frames from a single video may be distributed across the training, validation, and testing sets. This can introduce data leakage and lead to overly optimistic evaluation results.
+
+To address this problem, dataset splitting was performed at the **video level before frame extraction**. Videos were first divided into training, validation, and testing subsets. Frames were then extracted separately from each split using the existing preprocessing modules. This approach ensures that frames originating from the same video remain within a single dataset partition, resulting in a more realistic and reliable evaluation process.
+
+The final dataset structure generated by the module contains:
+
+* `train`
+* `valid`
+* `test`
+
+The resulting `/dataset/final-dataset` directory is used throughout all experiments conducted in this research-oriented project.
