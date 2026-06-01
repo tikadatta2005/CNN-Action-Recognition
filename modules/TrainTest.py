@@ -126,7 +126,8 @@ def trainer(
     lr=0.001,
     print_on=10,
     save_dir=None,
-    save_checkpoints=None
+    save_checkpoints=None,
+    checkpoint_name="checkpoint"
 ):
     metrics = []
 
@@ -176,7 +177,7 @@ def trainer(
         ):
             torch.save(
                 model.state_dict(),
-                save_dir / f"checkpoint_epoch_{i+1}.pth"
+                save_dir / f"{checkpoint_name}_{i+1}.pth"
             )
 
         metrics.append({
@@ -191,7 +192,7 @@ def trainer(
     if save_dir is not None:
         torch.save(
             model.state_dict(),
-            save_dir / "final_model.pth"
+            save_dir / f"final_{checkpoint_name}.pth"
         )
 
     return metrics

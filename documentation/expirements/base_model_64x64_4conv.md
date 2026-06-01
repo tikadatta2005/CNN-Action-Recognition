@@ -69,3 +69,25 @@ The experiment uses different modules including custom modules. Modules used in 
     )
     ```
 ## Model Performance and Evaluation
+### Train and Valid Comparison
+The `trainer(...)` module returns an array of metrics in array dict format storing following for each epoch:
+``` python
+{
+    "training_loss": float,
+    "training_accuracy": float,
+    "training_precision": float,
+    "training_recall": float,
+    "training_f1": float,
+    "validation_loss": float,
+    "validation_accuracy": float,
+    "validation_precision": float,
+    "validation_recall": float,
+    "validation_f1": float
+}
+```
+
+This data is converted to `pandas DataFrame` with added `epoch` columns.
+
+The tabular format of data is to used for uderstanding the behaviour of the model. Visualization techinique is also used for better gimplse of model's performance.
+
+### Evaluations from Metrics
