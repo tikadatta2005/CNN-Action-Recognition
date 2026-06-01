@@ -1,87 +1,176 @@
-# Base Model
+# BaseModel Architecture
 
 ## Overview
 
-The Base Model is a configurable Convolutional Neural Network (CNN) designed for image classification. It serves as the baseline architecture for evaluating violence and alert-level detection performance.
+`BaseModel` is a configurable Convolutional Neural Network (CNN) designed for image classification tasks. The architecture dynamically constructs a stack of convolutional blocks based on the specified number of layers, followed by a manually implemented fully connected classification layer.
 
-The architecture allows the number of convolutional layers and initial channel size to be adjusted while maintaining a consistent design pattern.
+The model is intended as a simple baseline architecture for experimentation and learning purposes, while maintaining flexibility through adjustable depth and channel sizes.
 
-## Architecture
+---
 
-The model follows the structure:
+## Architecture Structure
 
-```text
-Input
- ↓
-[Conv2D → ReLU → MaxPool]
- ↓
-[Repeat N Times]
- ↓
-Flatten
- ↓
-Linear Layer
- ↓
-Output Classes
+The network follows the pattern:
+
+```
+[Conv2D] → [ReLU] → [MaxPool2D]
+                ↓
+            Repeat N Times
+                ↓
+            Flatten
+                ↓
+         Linear Layer
+                ↓
+            Softmax*
 ```
 
-## Convolutional Layers
+* Softmax is internally handled by `CrossEntropyLoss` during training.
 
-Each convolutional block consists of:
+---
 
-* Conv2D (3×3 kernel)
-* ReLU activation
-* MaxPool2D (2×2)
+## Convolutional Feature Extractor
 
-The number of blocks is determined by the `conv_layers` parameter.
+The feature extraction component is built dynamically using a sequence of convolutional blocks.
 
-## Feature Expansion
+Each block consists of:
 
-The model progressively increases feature channels after each convolutional block.
+1. Convolution Layer
 
-Example:
+   * Kernel Size: 3×3
+   * Stride: 1
+   * Padding: 1
 
-```text
-3 → 16 → 32 → 64 → 128
+2. ReLU Activation
+
+3. Max Pooling
+
+   * Kernel Size: 2×2
+   * Stride: 2
+
+After each block:
+
+* Spatial dimensions are reduced by half.
+* Output channels are doubled.
+
+Example configuration:
+
+| Layer  | Input Channels | Output Channels |
+| ------ | -------------- | --------------- |
+| Conv 1 | 3              | 32              |
+| Conv 2 | 32             | 64              |
+| Conv 3 | 64             | 128             |
+
+for:
+
+```python
+BaseModel(
+    conv_layers=3,
+    initial_output_channel=32,
+    initial_image_size=224
+)
 ```
 
-This enables deeper layers to learn increasingly complex visual patterns.
+---
 
-## Spatial Reduction
+## Flattening
 
-Max pooling reduces the spatial dimensions of feature maps by half after every block.
+After passing through all convolutional blocks, the resulting feature maps are flattened into a one-dimensional vector.
 
-Example for a 224×224 image:
+Flattened size is computed dynamically as:
 
-```text
-224×224
-↓
-112×112
-↓
-56×56
-↓
-28×28
+```
+Flattened Size =
+Final Channels ×
+Final Height ×
+Final Width
 ```
 
-This reduces computational cost while retaining important features.
+where the height and width are reduced after every pooling operation.
+
+---
 
 ## Classification Layer
 
-After feature extraction, the feature maps are flattened and passed through a fully connected layer.
+Instead of using `nn.Linear`, the model implements the final classification layer manually using trainable parameters:
 
-The output layer produces predictions for three classes:
+```python
+self.W
+self.b
+```
 
-* Alert
-* High Alert
-* Normal
+Prediction is computed as:
+
+```
+y = xW + b
+```
+
+where:
+
+* x = flattened feature vector
+* W = weight matrix
+* b = bias vector
+
+The output dimension is fixed to 3 classes.
+
+---
 
 ## Loss Function
 
-Cross Entropy Loss is used for multi-class classification.
+The model uses Cross Entropy Loss:
 
-## Purpose
+```python
+nn.CrossEntropyLoss()
+```
 
-The Base Model is intended to:
+This combines:
 
-* Establish a performance baseline.
-* Evaluate the effectiveness of a simple CNN architecture.
-* Provide a foundation for comparison with deeper and more advanced architectures in subsequent experiments.
+1. Softmax activation
+2. Negative Log Likelihood Loss
+
+into a single numerically stable operation.
+
+---
+
+## Manual Parameter Updates
+
+Instead of using PyTorch optimizers such as SGD or Adam, the model performs gradient updates manually.
+
+Training step:
+
+1. Compute loss
+2. Perform backpropagation
+
+```python
+loss.backward()
+```
+
+3. Update parameters
+
+```python
+param -= lr * param.grad
+```
+
+4. Reset gradients
+
+```python
+param.grad.zero_()
+```
+
+All trainable parameters returned by `self.parameters()` are updated, including:
+
+* Convolution weights
+* Convolution biases
+* Classification weights (`W`)
+* Classification bias (`b`)
+
+This effectively implements basic Gradient Descent optimization.
+
+## Intended Use
+
+This architecture serves as a baseline CNN for:
+
+* Image classification experiments
+* Deep learning education
+* Understanding backpropagation
+* Understanding manual parameter optimization
+* Comparing against more advanced CNN architectures

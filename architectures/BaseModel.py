@@ -52,7 +52,8 @@ class BaseModel(nn.Module):
         flattened_size = in_channels * self.image_size * self.image_size
 
         # final linear layer for classification
-        self.fc = nn.Linear(flattened_size, 3)
+        self.W = nn.Parameter(torch.randn(flattened_size, 3) * 0.01)
+        self.b = nn.Parameter(torch.zeros(3))
 
         # loss function
         self.criterion = nn.CrossEntropyLoss()
@@ -66,7 +67,7 @@ class BaseModel(nn.Module):
         x = x.view(x.size(0), -1)
 
         # final classification layer
-        x = self.fc(x)
+        x = x @ self.W + self.b
 
         return x
 
@@ -76,3 +77,19 @@ class BaseModel(nn.Module):
         loss = self.criterion(y_pred, y)
 
         return loss
+    
+    def backward(self, loss, lr=0.001):
+        
+        # track backward
+        loss.backward()
+        
+        # with no grad
+        with torch.no_grad():
+            
+            for param in self.parameters():
+
+                if param.grad is not None:
+                    param -= lr * param.grad
+                    param.grad.zero_()
+            
+        return loss.item()
