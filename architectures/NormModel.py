@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-class BaseModel(nn.Module):
+class NormModel(nn.Module):
 
     def __init__(self, conv_layers, initial_output_channel, initial_image_size):
 

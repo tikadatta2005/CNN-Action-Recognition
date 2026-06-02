@@ -1,8 +1,8 @@
-# BaseModel Architecture
+# NormModel Architecture
 
 ## Overview
 
-`BaseModel` is a configurable Convolutional Neural Network (CNN) designed for image classification tasks. The architecture dynamically constructs a stack of convolutional blocks based on the specified number of layers, followed by a manually implemented fully connected classification layer.
+`NormModel` is a configurable Convolutional Neural Network (CNN) designed for image classification tasks. The architecture dynamically constructs a stack of convolutional blocks based on the specified number of layers, followed by a manually implemented fully connected classification layer.
 
 The model is intended as a simple baseline architecture for experimentation and learning purposes, while maintaining flexibility through adjustable depth and channel sizes.
 
@@ -13,7 +13,7 @@ The model is intended as a simple baseline architecture for experimentation and 
 The network follows the pattern:
 
 ```
-[Conv2D] → [ReLU] → [MaxPool2D]
+[Conv2D] → [ReLU] → [BatchNorm2d] → [MaxPool2D] → [DropOut2D]
                 ↓
             Repeat N Times
                 ↓
@@ -42,11 +42,19 @@ Each block consists of:
 
 2. ReLU Activation
 
-3. Max Pooling
+3. BatchNorm
+    
+   * output 
+
+4. Max Pooling
 
    * Kernel Size: 2×2
    * Stride: 2
 
+5. Dropout
+   
+   * p: 0.3
+    
 After each block:
 
 * Spatial dimensions are reduced by half.
@@ -63,7 +71,7 @@ Example configuration:
 for:
 
 ```python
-BaseModel(
+NormModel(
     conv_layers=3,
     initial_output_channel=32,
     initial_image_size=224
