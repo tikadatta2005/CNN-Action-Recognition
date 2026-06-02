@@ -91,7 +91,7 @@ This data is converted to `pandas DataFrame` with added `epoch` columns.
 The tabular format of data is to used for uderstanding the behaviour of the model. Visualization techinique is also used for better gimplse of model's performance.
 
 ### Evaluations from Metrics
-The visualized graph `/documentation/resources/base_img64_c4_lr0.005.png` shows comparison of 
+The visualized graph `/documentation/resources/base_img64_c4_lr0.001.png` shows comparison of 
 * loss
 * accuracy
 * precision
