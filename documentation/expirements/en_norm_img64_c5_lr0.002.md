@@ -15,7 +15,7 @@ model = EnhancedNormModel(
     conv_layers=4, 
     normalizations = [1, 1, 1, 1],
     poolings = [1,1,1,1],
-    dropouts = [0, 1, 0, 1],
+    dropouts = [0, 0, 1, 0, 1],
     initial_output_channel=16, 
     initial_image_size=64,
     dropout_p = 0.2
@@ -38,7 +38,7 @@ metrics = trainer(
     min_delta = 0.01
 )
 ```
-This early stopping did a great job stopping the model that was mot performing any better. The trainer stopped traing at epoch 16.
+This early stopping did a great job stopping the model that was not performing any better. The trainer stopped traing at epoch 16.
 
 The experiment very much outperformed previous experiments just because of these changes.
 
