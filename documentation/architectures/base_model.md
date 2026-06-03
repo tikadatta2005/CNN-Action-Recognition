@@ -2,31 +2,27 @@
 
 ## Overview
 
-`BaseModel` is a configurable Convolutional Neural Network (CNN) designed for image classification tasks. The architecture dynamically constructs a stack of convolutional blocks based on the specified number of layers, followed by a manually implemented fully connected classification layer.
+`BaseModel` is a architecture for Convolutional Neural Network (CNN). It designed for image classification tasks. The architecture dynamically constructs a stack of convolutional blocks based on the specified number of layers, followed by a manually implemented fully connected classification layer.
 
 The model is intended as a simple baseline architecture for experimentation and learning purposes, while maintaining flexibility through adjustable depth and channel sizes.
 
----
 
 ## Architecture Structure
-
 The network follows the pattern:
 
-```
+``` text
 [Conv2D] → [ReLU] → [MaxPool2D]
                 ↓
             Repeat N Times
                 ↓
             Flatten
                 ↓
-         Linear Layer
+            Linear Layer
                 ↓
-            Softmax*
+            CrossEntropyLoss
 ```
 
 * Softmax is internally handled by `CrossEntropyLoss` during training.
-
----
 
 ## Convolutional Feature Extractor
 
@@ -48,7 +44,6 @@ Each block consists of:
    * Stride: 2
 
 After each block:
-
 * Spatial dimensions are reduced by half.
 * Output channels are doubled.
 
@@ -69,8 +64,6 @@ BaseModel(
     initial_image_size=224
 )
 ```
-
----
 
 ## Flattening
 
@@ -100,7 +93,7 @@ self.b
 
 Prediction is computed as:
 
-```
+``` math
 y = xW + b
 ```
 
@@ -110,12 +103,7 @@ where:
 * W = weight matrix
 * b = bias vector
 
-The output dimension is fixed to 3 classes.
-
----
-
 ## Loss Function
-
 The model uses Cross Entropy Loss:
 
 ```python
@@ -123,36 +111,36 @@ nn.CrossEntropyLoss()
 ```
 
 This combines:
-
 1. Softmax activation
 2. Negative Log Likelihood Loss
 
 into a single numerically stable operation.
 
----
-
 ## Manual Parameter Updates
 
-Training step:
-
+<b>Training step:</b>
 1. Compute loss
+
+    ``` python
+    nn.CrossEntropyLoss()
+    ```
 2. Perform backpropagation
 
-```python
-loss.backward()
-```
+    ```python
+    loss.backward()
+    ```
 
 3. Update parameters
 
-```python
-param -= lr * param.grad
-```
+    ```python
+    param -= lr * param.grad
+    ```
 
 4. Reset gradients
 
-```python
-param.grad.zero_()
-```
+    ```python
+    param.grad.zero_()
+    ```
 
 All trainable parameters returned by `self.parameters()` are updated, including:
 

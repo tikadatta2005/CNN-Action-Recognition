@@ -6,8 +6,6 @@
 
 The model is intended as a simple baseline architecture for experimentation and learning purposes, while maintaining flexibility through adjustable depth and channel sizes.
 
----
-
 ## Architecture Structure
 
 The network follows the pattern:
@@ -19,14 +17,10 @@ The network follows the pattern:
                 ↓
             Flatten
                 ↓
-         Linear Layer
+            Linear Layer
                 ↓
-            Softmax*
+            CrossEntropyLoss
 ```
-
-* Softmax is internally handled by `CrossEntropyLoss` during training.
-
----
 
 ## Convolutional Feature Extractor
 
@@ -34,24 +28,24 @@ The feature extraction component is built dynamically using a sequence of convol
 
 Each block consists of:
 
-1. Convolution Layer
+1. <b>Convolution Layer</b>
 
    * Kernel Size: 3×3
    * Stride: 1
    * Padding: 1
 
-2. ReLU Activation
+2. <b>ReLU Activation</b>
 
-3. BatchNorm
+3. <b>BatchNorm</b>
     
    * output 
 
-4. Max Pooling
+4. <b>Max Pooling</b>
 
    * Kernel Size: 2×2
    * Stride: 2
 
-5. Dropout
+5. <b>Dropout</b>
    
    * p: 0.3
     
@@ -78,15 +72,13 @@ NormModel(
 )
 ```
 
----
-
 ## Flattening
 
 After passing through all convolutional blocks, the resulting feature maps are flattened into a one-dimensional vector.
 
 Flattened size is computed dynamically as:
 
-```
+``` text
 Flattened Size =
 Final Channels ×
 Final Height ×
@@ -94,8 +86,6 @@ Final Width
 ```
 
 where the height and width are reduced after every pooling operation.
-
----
 
 ## Classification Layer
 
@@ -108,7 +98,7 @@ self.b
 
 Prediction is computed as:
 
-```
+``` math
 y = xW + b
 ```
 
@@ -117,10 +107,6 @@ where:
 * x = flattened feature vector
 * W = weight matrix
 * b = bias vector
-
-The output dimension is fixed to 3 classes.
-
----
 
 ## Loss Function
 
@@ -137,30 +123,33 @@ This combines:
 
 into a single numerically stable operation.
 
----
-
 ## Manual Parameter Updates
 
 Training step:
 
-1. Compute loss
-2. Perform backpropagation
+1. <b>Compute loss</b>
 
-```python
-loss.backward()
-```
+   ```python
+   nn.CrossEntropyLoss()
+   ```
 
-3. Update parameters
+2. <b>Perform backpropagation</b>
 
-```python
-param -= lr * param.grad
-```
+   ```python
+   loss.backward()
+   ```
 
-4. Reset gradients
+3. <b>Update parameters</b>
 
-```python
-param.grad.zero_()
-```
+   ```python
+   param -= lr * param.grad
+   ```
+
+4. <b>Reset gradients</b>
+
+   ```python
+   param.grad.zero_()
+   ```
 
 All trainable parameters returned by `self.parameters()` are updated, including:
 
