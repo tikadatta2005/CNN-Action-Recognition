@@ -1,6 +1,6 @@
-# Base Model: 64x64 & 4 Conv Blocks
+# Norm Model: 64x64 & 4 Conv Blocks
 ## Overview
-This model uses the BaseModel architecture `/architectures/BaseModel.py`. The architecture is defined and documented briefly : `/documentation/architectures/base_model.md`. 
+This experiment uses the BaseModel architecture `/architectures/BaseModel.py`. The architecture is defined and documented briefly : `/documentation/architectures/base_model.md`. 
 
 The process is almost same as in `/documentation/expirements/base_img64_c4_lr0.001.md`. But due to it's limitations:
 * Slow Learining
@@ -10,7 +10,6 @@ The expirement has decreased learning rate:
 ``` math
 0.005
 ```
-and additional module `oversampler` was developed and used. It's documentation `/documentation/modules/OverSampler.md` gives the idea of how it is used.
 
 ### Flow of using modules:
 * <b>transforms: </b> For applying transformations such as:
@@ -117,7 +116,7 @@ This data is converted to `pandas DataFrame` with added `epoch` columns.
 The tabular format of data is to used for uderstanding the behaviour of the model. Visualization techinique is also used for better gimplse of model's performance. The trainer functions new features allowed model training to stop after very less or no improvements. The training was stopped at epoch seven.
 
 ### Evaluations from Metrics
-The visualized graph `/documentation/resources/norm_do_img_64_lr0.005_os.png` shows comparison of 
+The visualized graph `/documentation/resources/norm_do_img64_c4_lr0.005_os.png` shows comparison of 
 * loss
 * accuracy
 * precision
@@ -147,6 +146,7 @@ of both training and validation on each epoch.
 
 ### Next Steps
 * Decrease Oversampling
+* Decrease Learning Rate to 0.002
 * Update Architecture for Custom Dropouts after each layer.
 * Multiple Transformations for Data Augmentation using `transforms` module
 
