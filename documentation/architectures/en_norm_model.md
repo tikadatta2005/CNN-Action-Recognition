@@ -2,7 +2,7 @@
 
 ## Overview
 
-`EnhancedNormModel` is a dynamic Convolutional Neural Network (CNN) designed for image classification tasks. The architecture dynamically constructs a stack of convolutional blocks, decides BatchNorm2d and Dropouts per blocks based on the specified number of layers, normaliaztions array of `boolean`, dropouts array of `boolean`, followed by a manually implemented fully connected classification layer.
+`EnhancedNormModel` is a dynamic Convolutional Neural Network (CNN) designed for image classification tasks. The architecture dynamically constructs a stack of convolutional blocks, decides BatchNorm2d, Dropouts, and MaxPool2d per blocks based on the specified number of layers, normaliaztions array of `boolean | int`, dropouts array of `boolean | int`, poolings array of `boolean | int` followed by a manually implemented fully connected classification layer.
 
 The model is intended as a simple baseline architecture for experimentation and learning purposes, while maintaining flexibility through adjustable depth and channel sizes.
 
@@ -11,7 +11,7 @@ The model is intended as a simple baseline architecture for experimentation and 
 The network follows the pattern:
 
 ```
-[Conv2D] → [ReLU] → [Optional BatchNorm2d] → [MaxPool2D] → [Optional DropOut2D]
+[Conv2D] → [ReLU] → [Optional BatchNorm2d] → [Optional MaxPool2D] → [Optional DropOut2D]
                 ↓
             Repeat N Times
                 ↓
@@ -42,7 +42,7 @@ Each block consists of:
    * Optionally adds as per `normalizations` Array
 
 4. <b>Max Pooling</b>
-
+   * Adds optionally as per `poolings` Array
    * Kernel Size: 2×2
    * Stride: 2
 
@@ -73,7 +73,8 @@ EnhancedNormModel(
     initial_output_channel=32,
     initial_image_size=224,
     normalizations = [1, 1, 1],
-    dropouts = [0, 1, 1]
+    poolings=[1,1,1],
+    dropouts = [0, 1, 1],
     dropout_p = 0.3
 )
 ```
