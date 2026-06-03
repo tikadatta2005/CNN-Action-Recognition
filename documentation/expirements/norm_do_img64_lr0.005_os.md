@@ -6,9 +6,9 @@ The process is almost same as in `/documentation/expirements/base_img64_c4_lr0.0
 * Slow Learining
 * Class imbalance
 
-The expirement has increased learning rate:
+The expirement has decreased learning rate:
 ``` math
-0.0075
+0.005
 ```
 and additional module `oversampler` was developed and used. It's documentation `/documentation/modules/OverSampler.md` gives the idea of how it is used.
 
@@ -127,11 +127,11 @@ of both training and validation on each epoch.
 
 <b>Breif Insights from visualizations</b>
 
-* The loss graph shows smooth and stable learning for the training but the validation loss shows very less imporvements causing the training to break in middle.
-* The accuracy graph shows the training line gradually increasing to 0.80 and higher. But the valid line gradually increases till around 0.65 and stay there till epoch seven.
-* Precision graph shows train climbing fast then slows gradually reaching above 0.80 but the validation graph is barely moving upwards reaching steadly till 0.6 at 7th epoch.
+* The loss graph shows smooth and stable learning for the training but the validation loss shows very less imporvements with bumpy lines causing the training to break in middle.
+* The accuracy graph shows the training line gradually increasing to 0.80 and higher. But the valid line gradually increases till around 0.65 and stay almost constant. The valid line is not stable and has some small bumps.
+* Precision graph shows train climbing fast then slows gradually reaching above 0.80 but the validation graph is barely moving upwards reaching steadly till 0.6.
 * Recall graph shows train line climbing fast then slows gradually reaching above 0.80. On the other hand valid line barely moves remaining almost constant then slightly move even lower.
-* F1 graphj shows training line almost same as recall and precision. But the valid line is very slowly moving upwards till 0.55 in 3 epochs and constant till 7 epochs
+* F1 graphj shows training line almost same as recall and precision. But the valid line is very slowly moving upwards till 0.55 in 3 epochs and constant
 
 ### Limitations
 * <b>Overfitting:</b> Validation loss decrease is very slow and eventually tends on growing while training loss continues decreasing.
@@ -140,11 +140,13 @@ of both training and validation on each epoch.
 * <b>Generalization limit:</b> The model reaches a performance ceiling on validation data despite continued training improvements.
 
 ### Possible Problems
+* Heavy Oversampling
 * Heavy Dropouts
 * Less Data Augmentation
 * Too small Input size of 64x64
 
 ### Next Steps
+* Decrease Oversampling
 * Update Architecture for Custom Dropouts after each layer.
 * Multiple Transformations for Data Augmentation using `transforms` module
 
