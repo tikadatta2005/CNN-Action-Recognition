@@ -122,3 +122,14 @@ The visualized graph `/documentation/resources/base_img64_c4_lr0.001.png` shows 
 of both training and validation on each epoch.
 
 <b>Breif Insights from visualizations</b>
+
+* The loss graph shows smooth and stable learning in the early epochs, where both training and validation loss decrease together. After around epoch 3, validation loss begins to increase while training loss continues decreasing, showing a clear divergence and the start of overfitting.
+* The accuracy graph shows steady improvement in both training and validation accuracy initially. After approximately epoch 3, training accuracy continues rising, while validation accuracy improves slowly and then follows a smooth saturation curve, gradually flattening.
+* Precision, recall, and F1-score follow the same pattern: strong early improvement across both training and validation, followed by continued growth in training metrics while validation metrics show only minor gains and begin to saturate.
+* Overall, training curves are much smoother and more stable compared to previous experiments, indicating improved optimization behavior. However, validation performance shows a gradual saturation effect, where gains slow down and the model approaches its generalization limit.
+
+### Limitations
+* <b>Overfitting:</b> After around epoch 3, validation loss increases while training loss continues decreasing.
+* <b>Validation saturation:</b> Validation metrics improve early but then gradually flatten, showing limited further gains.
+* <b>Train–validation divergence:</b> Training metrics keep improving while validation improvements slow significantly.
+* <b>Generalization limit:</b> The model reaches a performance ceiling on validation data despite continued training improvements.
