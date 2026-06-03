@@ -118,6 +118,9 @@ def test_model(model, dataloader):
 # --------------------------------------------------
 # Training loop
 # --------------------------------------------------
+from pathlib import Path
+import torch
+
 def trainer(
     model,
     train_dataloader,
@@ -129,8 +132,9 @@ def trainer(
     save_checkpoints=None,
     checkpoint_name="checkpoint",
 
+    # Early stopping
     early_stop_patience=None,
-    monitor="test_loss",
+    monitor="valid_loss",
     min_delta=0.0
 ):
     metrics = []
@@ -143,7 +147,7 @@ def trainer(
         save_dir.mkdir(parents=True, exist_ok=True)
 
     # ----------------------------
-    # Early stopping variables
+    # Early stopping state
     # ----------------------------
     best_score = None
     bad_epochs = 0
@@ -153,43 +157,48 @@ def trainer(
     # ----------------------------
     for i in range(epoch):
 
-        # ---- train one epoch ----
+        # ---- training ----
         train_metrics = train_model(
             model=model,
             dataloader=train_dataloader,
             lr=lr
         )
 
-        # ---- if no validation ----
-        if test_dataloader is None:
-            metrics.append({"epoch": i + 1, **train_metrics})
-
-            # still allow checkpointing/logging below
-            test_metrics = None
-
-        else:
-            # ---- validation ----
+        # ---- validation ----
+        if test_dataloader is not None:
             test_metrics = test_model(
                 model=model,
                 dataloader=test_dataloader
             )
 
-            current_score = test_metrics.get(monitor)
+            # ----------------------------
+            # Normalize validation keys
+            # ----------------------------
+            valid_metrics = {
+                "valid_loss": test_metrics.get("loss"),
+                "valid_accuracy": test_metrics.get("accuracy"),
+                "valid_precision": test_metrics.get("precision"),
+                "valid_recall": test_metrics.get("recall"),
+                "valid_f1": test_metrics.get("f1"),
+            }
+
+            current_score = valid_metrics.get(monitor)
 
             if current_score is None:
-                raise ValueError(f"Monitor metric '{monitor}' not found in test_metrics")
+                raise ValueError(
+                    f"Monitor metric '{monitor}' is invalid. "
+                    f"Available metrics: {list(valid_metrics.keys())}"
+                )
 
             # ----------------------------
-            # Early stopping logic
+            # Early stopping
             # ----------------------------
             if early_stop_patience is not None:
 
-                # first epoch initialization
                 if best_score is None:
                     best_score = current_score
                     bad_epochs = 0
                     improved = True
-
                 else:
                     improved = current_score < (best_score - min_delta)
 
@@ -201,17 +210,22 @@ def trainer(
 
                 if bad_epochs >= early_stop_patience:
                     print(
-                        f"Early stopping triggered at epoch {i+1}. "
-                        f"No improvement for {early_stop_patience} epochs."
+                        f"Early stopping at epoch {i+1} | "
+                        f"No improvement for {early_stop_patience} epochs"
                     )
                     break
 
-            # store metrics
-            metrics.append({
-                "epoch": i + 1,
-                **train_metrics,
-                **{f"test_{k}": v for k, v in test_metrics.items()}
-            })
+        else:
+            valid_metrics = {}
+
+        # ----------------------------
+        # Store metrics
+        # ----------------------------
+        metrics.append({
+            "epoch": i + 1,
+            **train_metrics,
+            **valid_metrics
+        })
 
         # ----------------------------
         # Logging
@@ -226,7 +240,7 @@ def trainer(
                 print(
                     f"Epoch {i+1}/{epoch} | "
                     f"Train Loss: {train_metrics['training_loss']:.4f} | "
-                    f"Validation Loss: {test_metrics['loss']:.4f}"
+                    f"Valid Loss: {valid_metrics['valid_loss']:.4f}"
                 )
 
         # ----------------------------
@@ -243,7 +257,7 @@ def trainer(
             )
 
     # ----------------------------
-    # Final model save
+    # Final save
     # ----------------------------
     if save_dir is not None:
         torch.save(
