@@ -202,6 +202,25 @@ save_checkpoints=50
 
 saves a checkpoint every 50 epochs.
 
+### `early_stop_patience`
+
+Type: `int` or `None`, optional
+
+Early stop after `early_stop_patience` times bad training.
+
+### `monitor_loss`
+
+Type: `string`
+
+Use `monitor_loss` for determination of bad training.
+
+### `min_delta`
+
+Type: `float`
+
+change <= `min_delta` determine bad training.
+
+
 ---
 
 ## Checkpointing

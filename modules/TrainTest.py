@@ -127,41 +127,61 @@ def trainer(
     print_on=10,
     save_dir=None,
     save_checkpoints=None,
-    checkpoint_name="checkpoint"
+    checkpoint_name="checkpoint",
+
+    early_stop_patience=None,
+    monitor="test_loss",
+    min_delta=0.0
 ):
     metrics = []
 
-    # create checkpoint directory if requested
     if save_dir is not None:
         save_dir = Path(save_dir)
         save_dir.mkdir(parents=True, exist_ok=True)
 
+    best_score = None
+    bad_epochs = 0
+
     for i in range(epoch):
 
-        # train for one epoch
         train_metrics = train_model(
             model=model,
             dataloader=train_dataloader,
             lr=lr
         )
 
-        # training only
         if test_dataloader is None:
-
-            metrics.append({
-                "epoch": i + 1,
-                **train_metrics
-            })
-
+            metrics.append({"epoch": i + 1, **train_metrics})
             continue
 
-        # validation/testing
         test_metrics = test_model(
             model=model,
             dataloader=test_dataloader
         )
 
-        # progress logging
+        current_score = test_metrics.get(monitor)
+
+        # 🔥 EARLY STOPPING LOGIC
+        if early_stop_patience is not None:
+
+            if best_score is None:
+                best_score = current_score
+
+            improved = current_score < (best_score - min_delta)
+
+            if improved:
+                best_score = current_score
+                bad_epochs = 0
+            else:
+                bad_epochs += 1
+
+            if bad_epochs >= early_stop_patience:
+                print(
+                    f"Early stopping triggered at epoch {i+1}. "
+                    f"No improvement in {early_stop_patience} epochs."
+                )
+                break
+
         if print_on and (i + 1) % print_on == 0:
             print(
                 f"Epoch {i+1}/{epoch} | "
@@ -169,7 +189,6 @@ def trainer(
                 f"Validation Loss: {test_metrics['loss']:.4f}"
             )
 
-        # checkpoint saving
         if (
             save_checkpoints
             and save_dir is not None
@@ -183,12 +202,9 @@ def trainer(
         metrics.append({
             "epoch": i + 1,
             **train_metrics,
-            **{
-                f"test_{k}": v
-                for k, v in test_metrics.items()
-            }
+            **{f"test_{k}": v for k, v in test_metrics.items()}
         })
-    #save the final model   
+
     if save_dir is not None:
         torch.save(
             model.state_dict(),
