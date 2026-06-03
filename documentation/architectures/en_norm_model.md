@@ -1,15 +1,17 @@
-# NormModel Architecture
+# EnhancedNormModel Architecture
 
 ## Overview
 
-`NormModel` is a configurable Convolutional Neural Network (CNN) designed for image classification tasks. The architecture dynamically constructs a stack of convolutional blocks based on the specified number of layers, followed by a manually implemented fully connected classification layer.
+`EnhancedNormModel` is a dynamic Convolutional Neural Network (CNN) designed for image classification tasks. The architecture dynamically constructs a stack of convolutional blocks, decides BatchNorm2d and Dropouts per blocks based on the specified number of layers, normaliaztions array of `boolean`, dropouts array of `boolean`, followed by a manually implemented fully connected classification layer.
+
+The model is intended as a simple baseline architecture for experimentation and learning purposes, while maintaining flexibility through adjustable depth and channel sizes.
 
 ## Architecture Structure
 
 The network follows the pattern:
 
 ```
-[Conv2D] → [ReLU] → [BatchNorm2d] → [MaxPool2D] → [DropOut2D]
+[Conv2D] → [ReLU] → [Optional BatchNorm2d] → [MaxPool2D] → [Optional DropOut2D]
                 ↓
             Repeat N Times
                 ↓
@@ -34,9 +36,10 @@ Each block consists of:
 
 2. <b>ReLU Activation</b>
 
-3. <b>BatchNorm</b>
+3. <b>Optional BatchNorm</b>
     
    * output 
+   * Optionally adds as per `normalizations` Array
 
 4. <b>Max Pooling</b>
 
@@ -45,7 +48,9 @@ Each block consists of:
 
 5. <b>Dropout</b>
    
-   * p: 0.3
+   * dropout_p: 0.3
+   * Optionally adds as per `dropouts` Array
+   * Custom dropout value from `dropout_p`
     
 After each block:
 
@@ -63,10 +68,13 @@ Example configuration:
 for:
 
 ```python
-NormModel(
+EnhancedNormModel(
     conv_layers=3,
     initial_output_channel=32,
-    initial_image_size=224
+    initial_image_size=224,
+    normalizations = [1, 1, 1],
+    dropouts = [0, 1, 1]
+    dropout_p = 0.3
 )
 ```
 
