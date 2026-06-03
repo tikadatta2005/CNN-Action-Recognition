@@ -135,4 +135,6 @@ of both training and validation on each epoch.
 * <b>Generalization limit:</b> The model reaches a performance ceiling on validation data despite continued training improvements.
 
 ### Next Steps
-* Decrease the learning rate back to 0.001 while keeping the `oversampler` function.
+* Including `NormBatch2D` in the Architecture
+* Including `Dropout` in the Architecture
+* Decreasing Learning Rate slightly to 0.005
