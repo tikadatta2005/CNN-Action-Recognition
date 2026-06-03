@@ -99,14 +99,21 @@ The visualized graph `/documentation/resources/base_img64_c4_lr0.001.png` shows 
 * f1
 of both training and validation on each epoch.
 
-The loss graph shows that the model learns quickly in the beginning, but after some epochs it becomes almost flat, meaning the model stops improving much. Train and validation loss are very close, so the model is not overfitting.
+<b>Brief Insights from Visualizations</b>
 
-Accuracy shows that training is quite stable, while validation accuracy has small ups and downs because the validation dataset is small. Overall it slowly improves but not very strongly.
+* The loss graph shows that the model learns quickly in the beginning, but after some epochs it becomes almost flat, meaning the model stops improving much. Train and validation loss are very close, so the model is not overfitting.
 
-Precision and recall show that the model first struggles to correctly detect the rare class (high-alert). Recall starts very low but improves later, meaning the model slowly learns to identify those cases. F1 score stays low to medium, showing the balance between precision and recall is not very strong yet.
+* Accuracy shows that training is quite stable, while validation accuracy has small ups and downs because the validation dataset is small. Overall it slowly improves but not very strongly.
+
+* Precision and recall show that the model first struggles to correctly detect the rare class (high-alert). Recall starts very low but improves later, meaning the model slowly learns to identify those cases. 
+
+* F1 score stays low to medium, showing the balance between precision and recall is not very strong yet.
 
 ### Limitations
-The main problem is class imbalance. High-alert has only 600 samples compared to ~5000 in other classes, so the model is biased toward normal and alert classes. This causes low recall early and unstable performance on validation. Also, the model reaches a learning limit early and stops improving much after that.
+* <b>Class imbalance:</b> High-alert has only ~600 samples, while other classes have ~5000, causing bias toward majority classes.
+* <b>Low recall:</b> The model struggles to correctly identify high-alert samples, especially in early training.
+* <b>Validation instability:</b> Performance fluctuates due to the limited number of minority-class examples.
+* <b>Early convergence:</b> The model reaches its learning limit quickly and shows little improvement afterward.
 
 ### Next Steps
 * Increase learning rate (try 0.0075) to see if model can learn faster and escape early saturation.
