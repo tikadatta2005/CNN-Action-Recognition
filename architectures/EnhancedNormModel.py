@@ -5,13 +5,17 @@ import torch.nn.functional as F
 
 class EnhancedNormModel(nn.Module):
 
-    def __init__(self, conv_layers, normalizations, dropouts, initial_output_channel, initial_image_size, dropout_p=0):
+    def __init__(self, conv_layers, normalizations, poolings, dropouts, initial_output_channel, initial_image_size, dropout_p=0):
 
         # initialize nn.Module
         super().__init__()
         
         if not normalizations or len(normalizations)!= conv_layers:
             print("Normalization accepts array with equal length of conv_layers!")
+            
+        
+        if not poolings or len(poolings)!= conv_layers:
+            print("Poolings accepts array with equal length of conv_layers!")
             
         
         if not dropouts or len(dropouts)!= conv_layers:
@@ -48,7 +52,8 @@ class EnhancedNormModel(nn.Module):
             
 
             # downsample image
-            layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
+            if poolings[i]==1 or poolings[i]==True:
+                layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
             
             #dropout layer
             if dropouts[i]==1 or dropouts[i] == True:
@@ -59,7 +64,8 @@ class EnhancedNormModel(nn.Module):
             out_channels = out_channels * 2
 
             # reduce image size after pooling
-            self.image_size = self.image_size // 2
+            if poolings[i]==1 or poolings[i] == True:
+                self.image_size = self.image_size // 2
 
         # combine conv layers
         self.conv = nn.Sequential(*layers)
