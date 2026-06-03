@@ -133,3 +133,6 @@ of both training and validation on each epoch.
 * <b>Validation saturation:</b> Validation metrics improve early but then gradually flatten, showing limited further gains.
 * <b>Train–validation divergence:</b> Training metrics keep improving while validation improvements slow significantly.
 * <b>Generalization limit:</b> The model reaches a performance ceiling on validation data despite continued training improvements.
+
+### Next Steps
+* Decrease the learning rate back to 0.001 while keeping the `oversampler` function.
