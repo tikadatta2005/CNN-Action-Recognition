@@ -109,7 +109,7 @@ class OptimizedModel(nn.Module):
     # ---------------------------
     # backward (your old API kept)
     # ---------------------------
-    def backward(self, loss):
+    def backward(self, loss, lr=None):
         if self.optimizer is None:
             raise RuntimeError("Optimizer not set. Call set_optimizer() first.")
 
