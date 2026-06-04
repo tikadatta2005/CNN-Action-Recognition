@@ -133,28 +133,35 @@ of both training and validation on each epoch.
 
 <b>Breif Insights from visualizations</b>
 
-* The loss graph shows smooth and stable learning for the training but the validation loss shows very less imporvements with bumpy lines causing the training to break in middle.
-* The accuracy graph shows the training line gradually increasing to 0.80 and higher. But the valid line gradually increases till around 0.65 and stay almost constant. The valid line is not stable and has some small bumps.
-* Precision graph shows train climbing fast then slows gradually reaching above 0.80 but the validation graph is barely moving upwards reaching steadly till 0.6.
-* Recall graph shows train line climbing fast then slows gradually reaching above 0.80. On the other hand valid line barely moves remaining almost constant then slightly move even lower.
-* F1 graphj shows training line almost same as recall and precision. But the valid line is very slowly moving upwards till 0.55 in 3 epochs and constant
+* Training loss decreases smoothly throughout training, while validation loss improves initially before becoming noisy and gradually increasing after around 10 epochs, indicating moderate overfitting as the model continues fitting the training data more than the validation data.
+* Training accuracy steadily rises to approximately 96%, whereas validation accuracy improves rapidly during the first 10–15 epochs before plateauing around 78–81%, showing that most generalizable learning occurs early in training.
+*Training precision consistently increases to about 95%, while validation precision stabilizes between 65–73%, indicating that the model becomes more confident in its predictions while maintaining reasonable precision on unseen data.
+* Training recall gradually improves to around 95%, while validation recall remains relatively stable between 63–68%, suggesting that the model captures a reasonable proportion of samples from each class but still struggles with some challenging examples.
+* Training F1 score steadily increases to approximately 95%, while validation F1 quickly improves and then plateaus around 65–69%, with a best value of roughly 0.687, indicating the strongest balance between precision and recall achieved among recent experiments despite dataset imbalance.
 
 ### Limitations
-* <b>Overfitting:</b> Validation loss decrease is very slow and eventually tends on growing while training loss continues decreasing.
-* <b>Validation saturation:</b> Validation metrics improve early but then gradually flatten, showing limited further gains.
-* <b>Train–validation divergence:</b> Training metrics keep improving while validation improvements slow significantly.
-* <b>Generalization limit:</b> The model reaches a performance ceiling on validation data despite continued training improvements.
+* <b>Moderate Overfitting:</b> Training metrics continue improving while validation metrics plateau.
+* <b>Validation Loss Instability:</b> Several spikes in validation loss suggest occasional overconfident predictions.
+* <b>Limited Recall:</b> Validation recall remains around 65–68%, meaning some samples are still missed.
+* <b>Performance Plateau:</b> Metrics stop improving significantly after roughly 20–30 epochs.
+* <b>Class Imblance Sensitivity: </b> Despite improvements, minority classes may still be harder to classify accurately than majority classes.
+* <b>Generalization Gap Remains: </b>Approximately 14–15% gap between training and validation performance still exists.
 
-### Possible Problems
-* Heavy Oversampling
-* Heavy Dropouts
-* Less Data Augmentation
-* Too small Input size of 64x64
+The best-performing checkpoint of the final model was obtained at `Epoch 41`, where the model achieved
+``` text 
+validation:
+accuracy = 81.49%, 
+precision = 73.48%, 
+recall = 66.57%, 
+F1-score = 68.69%.
+```
+At this point, the training metrics were 
+``` text
+94.78% accuracy, 
+94.77% precision, 
+94.78% recall, 
+94.77% F1-score
+```
+indicating that the model had learned strong feature representations while maintaining reasonable generalization to unseen data. Although a train-validation gap remains, this epoch provided the best balance between precision and recall across classes, resulting in the highest validation F1-score observed during experimentation. Compared to previous models, this checkpoint demonstrated improved class-balanced performance and reduced overfitting, making it the selected final model.
 
-### Next Steps
-* Decrease Oversampling
-* Decrease Learning Rate to 0.002
-* Update Architecture for Custom Dropouts after each layer.
-* Multiple Transformations for Data Augmentation using `transforms` module
-
-Not increasing input size for immediate next experiment to test if the new experiment reveals something.
+The experiment may continue with another data later on.
