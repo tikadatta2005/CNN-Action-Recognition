@@ -19,7 +19,7 @@ model = EnhancedNormModel(
     dropout_p = 0.2
     ).to("cuda")
 ```
-The experiment has implemented less strict early_stopping_patience of 8.
+The experiment has implemented less strict early_stopping_patience of 15.
 
 ``` python
 metrics = trainer(
