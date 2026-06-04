@@ -52,7 +52,7 @@ As always the model returns a metric data which is converted to `pandas DataFram
 The tabular format of data is to used for uderstanding the behaviour of the model. Visualization techinique is also used for better gimplse of model's performance. The trainer functions new features allowed model training to stop after very less or no improvements. The training was stopped at epoch 30.
 
 ### Evaluation From Metrics
-The visualized graph `/documentation/resources/en_norm_img224_c5_lr0.002.png` shows comparison of 
+The visualized graph `/documentation/resources/dynamic_img224_c5_lr0.002.png` shows comparison of 
 * loss
 * accuracy
 * precision
@@ -81,3 +81,4 @@ The valid curve still shows some instability.
 * Switch back to previous architecture
 * set `monitor` to `valid_loss`
 * Increasing `RandomErasing` in `transforms`
+* Keep dropout to last conv block
