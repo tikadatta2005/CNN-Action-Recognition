@@ -1,4 +1,4 @@
-# Norm Model: 64x64 & 4 Conv Blocks
+# Optimized Model: 224x224 & 4 Conv Blocks
 ## Overview
 This experiment uses the OptimizedModel architecture `/architectures/OptimizedModel.py`. The architecture is defined and documented briefly : `/documentation/architectures/optimized_model.md`. 
 
